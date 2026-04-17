@@ -46,23 +46,5 @@
         "name": "Machop",
         "type": "Fighting",
         "level": 19
-    },
-    {
-        "id": 9,
-        "name": "Geodude",
-        "type": "Rock",
-        "level": 15
-    },
-    {
-        "id": 10,
-        "name": "Gastly",
-        "type": "Ghost",
-        "level": 22
-    },
-    {
-        "id": 11,
-        "name": "Joseph",
-        "type": "Fire",
-        "level": "69"
     }
 ]

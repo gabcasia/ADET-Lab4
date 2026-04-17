@@ -14,7 +14,6 @@
             min-height: 100vh;
         }
 
-        /* MAIN CONTAINER */
         .container {
             background: white;
             padding: 30px;
@@ -24,27 +23,23 @@
             text-align: center;
         }
 
-        h1, h2 {
-            margin-bottom: 20px;
+        h1, h2, h3 {
+            margin-bottom: 10px;
             color: #333;
         }
 
-        /* INPUTS */
-        input {
+        input, select {
             padding: 10px;
             margin: 6px;
             border-radius: 8px;
             border: 2px solid #ddd;
             outline: none;
-            transition: 0.2s;
         }
 
-        input:focus {
+        input:focus, select:focus {
             border-color: #3b82f6;
-            box-shadow: 0 0 6px rgba(59,130,246,0.3);
         }
 
-        /* BUTTONS */
         button {
             padding: 10px 16px;
             margin: 6px;
@@ -53,19 +48,8 @@
             color: white;
             cursor: pointer;
             font-weight: bold;
-            transition: 0.2s;
-        }
-        h3 {
-    margin-top: 20px;
-    color: #444;
-}
-
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(0,0,0,0.2);
         }
 
-        /* BUTTON COLORS (MORE VISIBLE) */
         .btn-login { background: #2563eb; }
         .btn-register { background: #16a34a; }
         .btn-add { background: #22c55e; }
@@ -73,7 +57,6 @@
         .btn-delete { background: #ef4444; }
         .btn-load { background: #444; }
 
-        /* GRID */
         #list {
             display: flex;
             flex-wrap: wrap;
@@ -81,26 +64,15 @@
             margin-top: 20px;
         }
 
-        /* CARD */
         .card {
-            background: #ffffff;
+            background: white;
             padding: 15px;
             margin: 10px;
             width: 180px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            transition: 0.2s;
         }
 
-        .card:hover {
-            transform: scale(1.05);
-        }
-
-        .card h3 {
-            margin-bottom: 10px;
-        }
-
-        /* TYPE BADGES */
         .type {
             padding: 4px 8px;
             border-radius: 6px;
@@ -112,11 +84,20 @@
         .water { background: #3b82f6; }
         .grass { background: #22c55e; }
         .electric { background: #facc15; color: black; }
-        .fighting { background: #ffee00; }
-        .rock { background: #5a2c01; }
-        .ghost { background: #6b7280; }
-        .fairy { background: #ec4899; }
-        .normal { background: #ff0000; }
+        .normal { background: #a8a77a; }
+        .ice { background: #96d9d6; color: black; }
+        .fighting { background: #c22e28; }
+        .poison { background: #a33ea1; }
+        .ground { background: #e2bf65; color: black; } 
+        .flying { background: #a98ff3; }
+        .psychic { background: #f95587; }
+        .bug { background: #a6b91a; }
+        .rock { background: #b6a136; }
+        .ghost { background: #735797; }
+        .dragon { background: #6f35fc; }
+        .dark { background: #705746; }
+        .steel { background: #b7b7ce; color: black; }
+        .fairy { background: #d685ad; }
 
 
     </style>
@@ -124,7 +105,6 @@
 
 <body>
 
-<!-- LOGIN -->
 <div id="auth" class="container">
     <h2>Pokédex Login</h2>
 
@@ -136,7 +116,6 @@
     <button class="btn-login" onclick="login()">Login</button>
 </div>
 
-<!-- APP -->
 <div id="app" class="container" style="display:none;">
 
 <h1>Pokédex</h1>
@@ -144,7 +123,28 @@
 <!-- ADD -->
 <h3>Add Pokémon</h3>
 <input id="name" placeholder="Name">
-<input id="type" placeholder="Type">
+
+<select id="type">
+    <option>Normal</option>
+    <option>Fire</option>
+    <option>Water</option>
+    <option>Electric</option>
+    <option>Grass</option>
+    <option>Ice</option>
+    <option>Fighting</option>
+    <option>Poison</option>
+    <option>Ground</option>
+    <option>Flying</option>
+    <option>Psychic</option>
+    <option>Bug</option>
+    <option>Rock</option>
+    <option>Ghost</option>
+    <option>Dragon</option>
+    <option>Dark</option>
+    <option>Steel</option>
+    <option>Fairy</option>
+</select>
+
 <input id="level" placeholder="Level">
 <button class="btn-add" onclick="addPokemon()">Add</button>
 
@@ -154,7 +154,29 @@
 <h3>Update Pokémon</h3>
 <input id="updateId" placeholder="ID">
 <input id="updateName" placeholder="Name">
-<input id="updateType" placeholder="Type">
+
+<select id="updateType">
+    <option value="">Select Type</option>
+    <option>Normal</option>
+    <option>Fire</option>
+    <option>Water</option>
+    <option>Electric</option>
+    <option>Grass</option>
+    <option>Ice</option>
+    <option>Fighting</option>
+    <option>Poison</option>
+    <option>Ground</option>
+    <option>Flying</option>
+    <option>Psychic</option>
+    <option>Bug</option>
+    <option>Rock</option>
+    <option>Ghost</option>
+    <option>Dragon</option>
+    <option>Dark</option>
+    <option>Steel</option>
+    <option>Fairy</option>
+</select>
+
 <input id="updateLevel" placeholder="Level">
 <button class="btn-update" onclick="updatePokemon()">Update</button>
 
@@ -169,7 +191,6 @@
 
 <br>
 
-<!-- LOAD -->
 <h3>All Pokémon</h3>
 <button class="btn-load" onclick="loadAll()">Load Pokémon</button>
 
@@ -280,13 +301,17 @@ async function loadAll() {
             const p = data.pokemon;
 
             list.innerHTML += `
-                <div class="card">
-                    <h3>${p.name}</h3>
-                    <p><span class="type ${p.type.toLowerCase()}">${p.type}</span></p>
-                    <p>Level: ${p.level}</p>
-                    <button class="btn-delete" onclick="deletePokemon(${p.id})">Delete</button>
-                </div>
-            `;
+    <div class="card">
+        <h3>${p.name}</h3>
+        <p>
+            <span class="type ${p.type.toLowerCase()}">
+                ${p.type}
+            </span>
+        </p>
+        <p>Level: ${p.level}</p>
+        <button class="btn-delete" onclick="deletePokemon(${p.id})">Delete</button>
+    </div>
+`;
         }
     }
 }
