@@ -3,5 +3,10 @@
         "id": 1,
         "username": "Gabriel-C",
         "password": "qwerty030105"
+    },
+    {
+        "id": 2,
+        "username": "gab-c",
+        "password": "casia030105"
     }
 ]

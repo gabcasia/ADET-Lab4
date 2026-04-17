@@ -1,4 +1,3 @@
-const fetch = require("node-fetch");
 const readline = require("readline");
 
 const BASE_URL = "http://localhost:8000/service.php";
