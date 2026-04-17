@@ -1,29 +1,54 @@
-# REST API Project
+# Pokémon REST API System
+
+This project is a simple REST API built using PHP that allows users to manage Pokémon data. It also demonstrates how APIs can be used by different clients.
+
+---
 
 ## Features
-- User registration
-- Login validation
-- Get user
-- Update user
 
-## Server
-- PHP REST API
-- JSON storage
+- User Registration  
+- User Login  
+- Add Pokémon  
+- Get Pokémon by ID  
+- Update Pokémon  
+- Delete Pokémon  
+- View all Pokémon  
 
-## Clients
-- Python CLI client
-- JavaScript Node.js client
+---
+
+## Technologies Used
+
+- PHP  
+- JSON  
+- HTML, CSS, JavaScript  
+- Python (client)  
+- Node.js (client)  
+
+---
 
 ## How to Run
 
-### Start Server
+1. Go to the server folder:
 cd server
+
+2. Start the server:
 php -S localhost:8000
 
-### Run Python Client
-cd client-python
-python client.py
+3. Open in browser:
+http://localhost:8000/index.html
 
-### Run JS Client
-cd client-js
-node client.js
+---
+
+## Notes
+
+- Pokémon data is stored in `pokemon.json`  
+- User accounts are stored in `users.json`  
+- Make sure PHP is installed and added to PATH  
+
+---
+
+## Authors
+
+Gabriel Joseph L. Casia
+Carl Nathan S. Poot
+Joseph Odilon P. Dating Jr.
