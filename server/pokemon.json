@@ -58,5 +58,11 @@
         "name": "Gastly",
         "type": "Ghost",
         "level": 22
+    },
+    {
+        "id": 11,
+        "name": "Joseph",
+        "type": "Fire",
+        "level": "69"
     }
 ]

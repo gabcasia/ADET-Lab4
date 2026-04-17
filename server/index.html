@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pokédex System</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            background: #eef1f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            width: 720px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+            text-align: center;
+        }
+
+        h1, h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* INPUTS */
+        input {
+            padding: 10px;
+            margin: 6px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            outline: none;
+            transition: 0.2s;
+        }
+
+        input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 6px rgba(59,130,246,0.3);
+        }
+
+        /* BUTTONS */
+        button {
+            padding: 10px 16px;
+            margin: 6px;
+            border-radius: 8px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        h3 {
+    margin-top: 20px;
+    color: #444;
+}
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 12px rgba(0,0,0,0.2);
+        }
+
+        /* BUTTON COLORS (MORE VISIBLE) */
+        .btn-login { background: #2563eb; }
+        .btn-register { background: #16a34a; }
+        .btn-add { background: #22c55e; }
+        .btn-update { background: #3b82f6; }
+        .btn-delete { background: #ef4444; }
+        .btn-load { background: #444; }
+
+        /* GRID */
+        #list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        /* CARD */
+        .card {
+            background: #ffffff;
+            padding: 15px;
+            margin: 10px;
+            width: 180px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transition: 0.2s;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+        }
+
+        .card h3 {
+            margin-bottom: 10px;
+        }
+
+        /* TYPE BADGES */
+        .type {
+            padding: 4px 8px;
+            border-radius: 6px;
+            color: white;
+            font-size: 12px;
+        }
+
+        .fire { background: #f97316; }
+        .water { background: #3b82f6; }
+        .grass { background: #22c55e; }
+        .electric { background: #facc15; color: black; }
+        .fighting { background: #ffee00; }
+        .rock { background: #5a2c01; }
+        .ghost { background: #6b7280; }
+        .fairy { background: #ec4899; }
+        .normal { background: #ff0000; }
+
+
+    </style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+<div id="auth" class="container">
+    <h2>Pokédex Login</h2>
+
+    <input id="username" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+
+    <br>
+    <button class="btn-register" onclick="register()">Register</button>
+    <button class="btn-login" onclick="login()">Login</button>
+</div>
+
+<!-- APP -->
+<div id="app" class="container" style="display:none;">
+
+<h1>Pokédex</h1>
+
+<!-- ADD -->
+<h3>Add Pokémon</h3>
+<input id="name" placeholder="Name">
+<input id="type" placeholder="Type">
+<input id="level" placeholder="Level">
+<button class="btn-add" onclick="addPokemon()">Add</button>
+
+<br><br>
+
+<!-- UPDATE -->
+<h3>Update Pokémon</h3>
+<input id="updateId" placeholder="ID">
+<input id="updateName" placeholder="Name">
+<input id="updateType" placeholder="Type">
+<input id="updateLevel" placeholder="Level">
+<button class="btn-update" onclick="updatePokemon()">Update</button>
+
+<br><br>
+
+<!-- GET -->
+<h3>Get Pokémon</h3>
+<input id="searchId" placeholder="Enter ID">
+<button class="btn-update" onclick="getPokemon()">Get</button>
+
+<div id="searchResult"></div>
+
+<br>
+
+<!-- LOAD -->
+<h3>All Pokémon</h3>
+<button class="btn-load" onclick="loadAll()">Load Pokémon</button>
+
+<div id="list"></div>
+
+</div>
+
+<script>
+const BASE_URL = "http://localhost:8000/service.php";
+
+// AUTH
+async function register() {
+    await fetch(`${BASE_URL}?action=register`, {
+        method: "POST",
+        body: JSON.stringify({
+            username: username.value,
+            password: password.value
+        })
+    });
+    alert("Registered!");
+}
+
+async function login() {
+    const res = await fetch(`${BASE_URL}?action=login`, {
+        method: "POST",
+        body: JSON.stringify({
+            username: username.value,
+            password: password.value
+        })
+    });
+
+    const data = await res.json();
+
+    if (data.status === "success") {
+        auth.style.display = "none";
+        app.style.display = "block";
+    } else {
+        alert("Login failed");
+    }
+}
+
+// CRUD
+async function addPokemon() {
+    const nameValue = document.getElementById("name").value;
+    const typeValue = document.getElementById("type").value;
+    const levelValue = document.getElementById("level").value;
+
+    await fetch(`${BASE_URL}?action=add`, {
+        method: "POST",
+        body: JSON.stringify({
+            name: nameValue,
+            type: typeValue,
+            level: levelValue
+        })
+    });
+
+    loadAll();
+}
+
+async function updatePokemon() {
+    const id = document.getElementById("updateId").value;
+    const name = document.getElementById("updateName").value;
+    const type = document.getElementById("updateType").value;
+    const level = document.getElementById("updateLevel").value;
+
+    await fetch(`${BASE_URL}?action=update`, {
+        method: "POST",
+        body: JSON.stringify({ id, name, type, level })
+    });
+
+    loadAll();
+}
+
+async function deletePokemon(id) {
+    await fetch(`${BASE_URL}?action=delete&id=${id}`);
+    loadAll();
+}
+
+async function getPokemon() {
+    const id = searchId.value;
+
+    const res = await fetch(`${BASE_URL}?action=get&id=${id}`);
+    const data = await res.json();
+
+    if (data.status === "success") {
+        const p = data.pokemon;
+
+        searchResult.innerHTML = `
+            <div class="card">
+                <h3>${p.name}</h3>
+                <p>${p.type}</p>
+                <p>Level: ${p.level}</p>
+            </div>
+        `;
+    } else {
+        searchResult.innerHTML = "<p>Not found</p>";
+    }
+}
+
+async function loadAll() {
+    list.innerHTML = "";
+
+    for (let i = 1; i <= 20; i++) {
+        const res = await fetch(`${BASE_URL}?action=get&id=${i}`);
+        const data = await res.json();
+
+        if (data.status === "success") {
+            const p = data.pokemon;
+
+            list.innerHTML += `
+                <div class="card">
+                    <h3>${p.name}</h3>
+                    <p><span class="type ${p.type.toLowerCase()}">${p.type}</span></p>
+                    <p>Level: ${p.level}</p>
+                    <button class="btn-delete" onclick="deletePokemon(${p.id})">Delete</button>
+                </div>
+            `;
+        }
+    }
+}
+</script>
+
+</body>
+</html>
