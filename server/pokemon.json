@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "name": "Pikachu",
+        "type": "Electric",
+        "level": 25
+    },
+    {
+        "id": 2,
+        "name": "Charmander",
+        "type": "Fire",
+        "level": 18
+    },
+    {
+        "id": 3,
+        "name": "Squirtle",
+        "type": "Water",
+        "level": 16
+    },
+    {
+        "id": 4,
+        "name": "Bulbasaur",
+        "type": "Grass",
+        "level": 20
+    },
+    {
+        "id": 5,
+        "name": "Jigglypuff",
+        "type": "Fairy",
+        "level": 12
+    },
+    {
+        "id": 6,
+        "name": "Meowth",
+        "type": "Normal",
+        "level": 14
+    },
+    {
+        "id": 7,
+        "name": "Psyduck",
+        "type": "Water",
+        "level": 17
+    },
+    {
+        "id": 8,
+        "name": "Machop",
+        "type": "Fighting",
+        "level": 19
+    },
+    {
+        "id": 9,
+        "name": "Geodude",
+        "type": "Rock",
+        "level": 15
+    },
+    {
+        "id": 10,
+        "name": "Gastly",
+        "type": "Ghost",
+        "level": 22
+    }
+]

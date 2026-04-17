@@ -1,98 +1,87 @@
 <?php
 header("Content-Type: application/json");
 
-$method = $_SERVER['REQUEST_METHOD'];
-$dataFile = "users.json";
+$dataFile = "pokemon.json";
+$pokemonList = json_decode(file_get_contents($dataFile), true);
 
-// Load users
-$users = json_decode(file_get_contents($dataFile), true);
-
-// Helper: save users
-function saveUsers($users, $file) {
-    file_put_contents($file, json_encode($users, JSON_PRETTY_PRINT));
+function saveData($data, $file) {
+    file_put_contents($file, json_encode($data, JSON_PRETTY_PRINT));
 }
 
-// Get input
-$input = json_decode(file_get_contents("php://input"), true);
-
-// ROUTING
 $action = $_GET['action'] ?? '';
+$input = json_decode(file_get_contents("php://input"), true);
 
 switch ($action) {
 
-    // 🔹 REGISTER USER
-    case "register":
-        $username = $input['username'] ?? '';
-        $password = $input['password'] ?? '';
+    // 🔹 CREATE Pokémon
+    case "add":
+        $name = $input['name'] ?? '';
+        $type = $input['type'] ?? '';
+        $level = $input['level'] ?? '';
 
-        if (!$username || !$password) {
+        if (!$name || !$type || !$level) {
             echo json_encode(["status" => "error", "message" => "Missing parameters"]);
             exit;
         }
 
-        foreach ($users as $user) {
-            if ($user['username'] === $username) {
-                echo json_encode(["status" => "error", "message" => "User already exists"]);
-                exit;
-            }
-        }
-
-        $newUser = [
-            "id" => count($users) + 1,
-            "username" => $username,
-            "password" => $password
+        $newPokemon = [
+            "id" => count($pokemonList) + 1,
+            "name" => $name,
+            "type" => $type,
+            "level" => $level
         ];
 
-        $users[] = $newUser;
-        saveUsers($users, $dataFile);
+        $pokemonList[] = $newPokemon;
+        saveData($pokemonList, $dataFile);
 
-        echo json_encode(["status" => "success", "user" => $newUser]);
+        echo json_encode(["status" => "success", "pokemon" => $newPokemon]);
         break;
 
-    // 🔹 LOGIN
-    case "login":
-        $username = $input['username'] ?? '';
-        $password = $input['password'] ?? '';
-
-        foreach ($users as $user) {
-            if ($user['username'] === $username && $user['password'] === $password) {
-                echo json_encode(["status" => "success", "message" => "Login successful"]);
-                exit;
-            }
-        }
-
-        echo json_encode(["status" => "error", "message" => "Invalid credentials"]);
-        break;
-
-    // 🔹 GET USER
+    // 🔹 READ Pokémon
     case "get":
         $id = $_GET['id'] ?? '';
 
-        foreach ($users as $user) {
-            if ($user['id'] == $id) {
-                echo json_encode(["status" => "success", "user" => $user]);
+        foreach ($pokemonList as $p) {
+            if ($p['id'] == $id) {
+                echo json_encode(["status" => "success", "pokemon" => $p]);
                 exit;
             }
         }
 
-        echo json_encode(["status" => "error", "message" => "User not found"]);
+        echo json_encode(["status" => "error", "message" => "Not found"]);
         break;
 
-    // 🔹 UPDATE USER
+    // 🔹 UPDATE Pokémon
     case "update":
         $id = $input['id'] ?? '';
-        $newUsername = $input['username'] ?? '';
+        $level = $input['level'] ?? '';
 
-        foreach ($users as &$user) {
-            if ($user['id'] == $id) {
-                $user['username'] = $newUsername;
-                saveUsers($users, $dataFile);
-                echo json_encode(["status" => "success", "user" => $user]);
+        foreach ($pokemonList as &$p) {
+            if ($p['id'] == $id) {
+                $p['level'] = $level;
+                saveData($pokemonList, $dataFile);
+                echo json_encode(["status" => "success", "pokemon" => $p]);
                 exit;
             }
         }
 
-        echo json_encode(["status" => "error", "message" => "User not found"]);
+        echo json_encode(["status" => "error", "message" => "Not found"]);
+        break;
+
+    // 🔹 DELETE Pokémon
+    case "delete":
+        $id = $_GET['id'] ?? '';
+
+        foreach ($pokemonList as $index => $p) {
+            if ($p['id'] == $id) {
+                array_splice($pokemonList, $index, 1);
+                saveData($pokemonList, $dataFile);
+                echo json_encode(["status" => "success", "message" => "Deleted"]);
+                exit;
+            }
+        }
+
+        echo json_encode(["status" => "error", "message" => "Not found"]);
         break;
 
     default:

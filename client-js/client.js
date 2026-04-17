@@ -7,43 +7,37 @@ const rl = readline.createInterface({
   output: process.stdout
 });
 
-function ask(question) {
-  return new Promise(resolve => rl.question(question, resolve));
-}
-
-async function register() {
-  const username = await ask("Username: ");
-  const password = await ask("Password: ");
-
-  const res = await fetch(`${BASE_URL}?action=register`, {
-    method: "POST",
-    body: JSON.stringify({ username, password }),
-  });
-
-  console.log(await res.json());
-}
-
-async function login() {
-  const username = await ask("Username: ");
-  const password = await ask("Password: ");
-
-  const res = await fetch(`${BASE_URL}?action=login`, {
-    method: "POST",
-    body: JSON.stringify({ username, password }),
-  });
-
-  console.log(await res.json());
+function ask(q) {
+  return new Promise(res => rl.question(q, res));
 }
 
 async function main() {
   while (true) {
-    console.log("\n1. Register\n2. Login\n3. Exit");
+    console.log("\n1. Add Pokemon\n2. Get Pokemon\n3. Exit");
     const choice = await ask("Choose: ");
 
-    if (choice === "1") await register();
-    else if (choice === "2") await login();
+    if (choice === "1") {
+      const name = await ask("Name: ");
+      const type = await ask("Type: ");
+      const level = await ask("Level: ");
+
+      const res = await fetch(`${BASE_URL}?action=add`, {
+        method: "POST",
+        body: JSON.stringify({ name, type, level })
+      });
+
+      console.log(await res.json());
+    }
+
+    else if (choice === "2") {
+      const id = await ask("Pokemon ID: ");
+      const res = await fetch(`${BASE_URL}?action=get&id=${id}`);
+      console.log(await res.json());
+    }
+
     else break;
   }
+
   rl.close();
 }
 
